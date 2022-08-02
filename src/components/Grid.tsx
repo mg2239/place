@@ -13,14 +13,14 @@ type GridBoxProps = {
 const GridBox = ({ color, position, onClick }: GridBoxProps) => {
   const [hover, setHover] = useState(false);
   const [selected, setSelected] = useState(color);
-  const { selectedColor } = useUser();
+  const { selectedColor, canPlace } = useUser();
 
-  const shouldPreview = Boolean(hover && selectedColor);
+  const shouldPreview = Boolean(hover && selectedColor && canPlace);
 
   const handleHover = () => {};
 
   const handleClick = () => {
-    if (selectedColor) {
+    if (selectedColor && canPlace) {
       setSelected(selectedColor);
       setHover(false);
       onClick(position);
@@ -33,10 +33,10 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
         "w-full",
         "h-full",
         getColor(selected),
-        "cursor-pointer",
         shouldPreview && [
           `hover:${getColor(selectedColor!)}`,
           "hover:opacity-50",
+          "cursor-pointer",
         ]
       )}
       onMouseEnter={() => setHover(true)}
@@ -46,7 +46,7 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
   );
 };
 
-const SIZE = 10;
+const SIZE = 20;
 
 const Grid = () => {
   const [grid, setGrid] = useState<GridBoxProps[]>(
@@ -70,7 +70,7 @@ const Grid = () => {
 
   return (
     <div
-      className={tw`grid grid-cols-10 w-grid h-grid m-auto mt-4 border border-slate-200`}
+      className={tw`grid grid-cols-size w-grid h-grid m-auto mt-4 border border-slate-200`}
     >
       {grid.map((props) => (
         <GridBox {...props} />

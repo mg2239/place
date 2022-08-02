@@ -34,6 +34,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
   const [timeRemaining, setTimeRemaining] = useState(
     initialState.timeRemaining
   );
+  const [canPlace, setCanPlace] = useState(initialState.canPlace);
 
   const onSelect = (color: Color) => {
     setSelectedColor((prev) => {
@@ -44,11 +45,6 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     });
   };
 
-  const canPlace = useMemo(
-    () => Boolean(selectedColor && timeRemaining === 0),
-    [selectedColor, timeRemaining]
-  );
-
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeRemaining((prev) => {
@@ -58,11 +54,18 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
         return prev;
       });
     }, 1000);
+
     return () => clearInterval(interval);
-  }, [timeRemaining]);
+  }, []);
+
+  useEffect(() => {
+    console.log(canPlace);
+    setCanPlace(Boolean(selectedColor && timeRemaining === 0));
+  }, [timeRemaining, selectedColor]);
 
   const onPlace = () => {
     setTimeRemaining(10);
+    setSelectedColor(undefined);
   };
 
   return (

@@ -9,6 +9,9 @@ module.exports = {
       height: {
         grid: "30rem",
       },
+      gridTemplateColumns: {
+        size: "repeat(20, minmax(0, 1fr))",
+      },
     },
   },
   plugins: [],
