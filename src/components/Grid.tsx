@@ -12,6 +12,7 @@ type GridBoxProps = {
 
 const GridBox = ({ color, position, onClick }: GridBoxProps) => {
   const [hover, setHover] = useState(false);
+  const [selected, setSelected] = useState(color);
   const { selectedColor } = useUser();
 
   const shouldPreview = Boolean(hover && selectedColor);
@@ -19,7 +20,11 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
   const handleHover = () => {};
 
   const handleClick = () => {
-    onClick(position);
+    if (selectedColor) {
+      setSelected(selectedColor);
+      setHover(false);
+      onClick(position);
+    }
   };
 
   return (
@@ -27,11 +32,11 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
       className={tw(
         "w-full",
         "h-full",
-        getColor(color),
+        getColor(selected),
         "cursor-pointer",
         shouldPreview && [
           `hover:${getColor(selectedColor!)}`,
-          "hover:opacity-70",
+          "hover:opacity-50",
         ]
       )}
       onMouseEnter={() => setHover(true)}
