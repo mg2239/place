@@ -1,15 +1,44 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { tw } from "twind";
 import { Color, Position } from "../types";
 import { getColor } from "../util";
+import { useUser } from "../context/UserContext";
 
 type GridBoxProps = {
   color: Color;
   position: Position;
+  onClick: (position: Position) => void;
 };
 
-const GridBox = ({ color, position }: GridBoxProps) => {
-  return <span className={tw`w-full h-full ${getColor(color)}`} />;
+const GridBox = ({ color, position, onClick }: GridBoxProps) => {
+  const [hover, setHover] = useState(false);
+  const { selectedColor } = useUser();
+
+  const shouldPreview = Boolean(hover && selectedColor);
+
+  const handleHover = () => {};
+
+  const handleClick = () => {
+    onClick(position);
+  };
+
+  return (
+    <span
+      className={tw(
+        "w-full",
+        "h-full",
+        getColor(color),
+        "cursor-pointer",
+        shouldPreview && [
+          `hover:${getColor(selectedColor!)}`,
+          "hover:opacity-70",
+        ]
+      )}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onClick={handleClick}
+    />
+  );
 };
 
 const SIZE = 10;
@@ -19,13 +48,19 @@ const Grid = () => {
     [...new Array(SIZE ** 2)].map((_, index) => ({
       color: Color.WHITE,
       position: getPosition(index),
+      onClick: onClick,
     }))
   );
+  const { onPlace } = useUser();
 
   function getPosition(index: number) {
     const x = index % SIZE;
     const y = Math.floor(index / SIZE);
     return { y, x };
+  }
+
+  function onClick(position: Position) {
+    onPlace();
   }
 
   return (
