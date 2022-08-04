@@ -59,7 +59,6 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
   }, []);
 
   useEffect(() => {
-    console.log(canPlace);
     setCanPlace(Boolean(selectedColor && timeRemaining === 0));
   }, [timeRemaining, selectedColor]);
 

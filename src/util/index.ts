@@ -1,11 +1,11 @@
 import { Color } from "../types";
 
-export const getColor = (color: Color) => {
+export const getBgColor = (color: Color) => {
   const map = {
     red: "bg-red-500",
     orange: "bg-orange-400",
     yellow: "bg-yellow-400",
-    green: "bg-emerald-500",
+    green: "bg-green-500",
     blue: "bg-blue-500",
     purple: "bg-purple-500",
     pink: "bg-pink-500",

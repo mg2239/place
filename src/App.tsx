@@ -14,6 +14,8 @@ const App = () => {
           <ColorSelector />
           <Timer />
         </div>
+        {/* issue with orange not showing on hover, so hacky way to fix */}
+        <span className={tw`hover:bg-orange-400`} />
       </UserProvider>
     </>
   );

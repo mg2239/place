@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { tw } from "twind";
 import { Color, Position } from "../types";
-import { getColor } from "../util";
+import { getBgColor } from "../util";
 import { useUser } from "../context/UserContext";
 
 type GridBoxProps = {
@@ -15,7 +15,7 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
   const [selected, setSelected] = useState(color);
   const { selectedColor, canPlace } = useUser();
 
-  const shouldPreview = Boolean(hover && selectedColor && canPlace);
+  const shouldPreview = Boolean(hover && canPlace);
 
   const handleHover = () => {};
 
@@ -32,12 +32,8 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
       className={tw(
         "w-full",
         "h-full",
-        getColor(selected),
-        shouldPreview && [
-          `hover:${getColor(selectedColor!)}`,
-          "hover:opacity-50",
-          "cursor-pointer",
-        ]
+        getBgColor(selected),
+        shouldPreview && `hover:${getBgColor(selectedColor!)}`
       )}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
@@ -56,7 +52,7 @@ const Grid = () => {
       onClick: onClick,
     }))
   );
-  const { onPlace } = useUser();
+  const { canPlace, onPlace } = useUser();
 
   function getPosition(index: number) {
     const x = index % SIZE;
@@ -70,7 +66,9 @@ const Grid = () => {
 
   return (
     <div
-      className={tw`grid grid-cols-size w-grid h-grid m-auto mt-4 border border-slate-200`}
+      className={tw`grid grid-cols-size w-grid h-grid m-auto mt-4 border border-slate-200 ${
+        canPlace && "cursor-none"
+      }`}
     >
       {grid.map((props) => (
         <GridBox {...props} />

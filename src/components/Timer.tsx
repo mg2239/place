@@ -1,16 +1,16 @@
-import * as dayjs from "dayjs";
-import * as duration from "dayjs/plugin/duration";
+import { DateTime } from "luxon";
 import { useUser } from "../context/UserContext";
 import { tw } from "twind";
-
-dayjs.extend(duration);
 
 const Timer = () => {
   const { timeRemaining } = useUser();
   return (
-    <p className={tw`text-center ${!timeRemaining && "hidden"}`}>
-      time until next place:{" "}
-      {dayjs.duration(timeRemaining, "seconds").format("m:ss")}
+    <p
+      className={tw`text-center mt-8 ${
+        !timeRemaining && "hidden"
+      } font-bold text-3xl`}
+    >
+      {DateTime.fromSeconds(timeRemaining).toFormat("m:ss")}
     </p>
   );
 };
