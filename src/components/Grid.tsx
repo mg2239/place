@@ -66,7 +66,7 @@ const Grid = () => {
 
   return (
     <div
-      className={tw`grid grid-cols-size w-grid h-grid m-auto mt-4 border border-slate-200 ${
+      className={tw`grid grid-cols-size w-grid h-grid m-auto mt-4 border border-slate-300 ${
         canPlace && "cursor-none"
       }`}
     >
