@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { tw } from "twind";
-import { Color } from "../types";
-import { getBgColor, SIZE } from "../util";
+import { getBgColor } from "../util";
 import { useUser } from "../context/UserContext";
 import { GridBox as GridBoxType } from "../types/index";
+import useGrid from "../hooks/useGrid";
 
 type GridBoxProps = GridBoxType & {
   position: number;
@@ -12,12 +12,12 @@ type GridBoxProps = GridBoxType & {
 
 const GridBox = ({ color, position, onClick }: GridBoxProps) => {
   const [hover, setHover] = useState(false);
-  const { selectedColor, canPlace } = useUser();
+  const { selectedColor } = useUser();
 
-  const shouldPreview = Boolean(hover && canPlace);
+  const shouldPreview = Boolean(hover && selectedColor);
 
   const handleClick = () => {
-    if (selectedColor && canPlace) {
+    if (selectedColor) {
       setHover(false);
       onClick(position);
     }
@@ -39,28 +39,18 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
 };
 
 const Grid = () => {
-  const [grid, setGrid] = useState<GridBoxType[]>(
-    [...new Array(SIZE ** 2)].map(() => ({
-      color: Color.WHITE,
-    }))
-  );
-  const { canPlace, onPlace, selectedColor } = useUser();
+  const { grid, updateGrid } = useGrid();
+  const { onPlace, selectedColor } = useUser();
 
   const onClick = (position: number) => {
-    setGrid((prev) => {
-      if (selectedColor) {
-        prev[position].color = selectedColor;
-        onPlace(prev);
-        return [...prev];
-      }
-      return prev;
-    });
+    updateGrid(selectedColor!, position);
+    onPlace();
   };
 
   return (
     <div
       className={tw`grid grid-cols-size w-grid h-grid m-auto mt-4 border border-slate-300 ${
-        canPlace && "cursor-none"
+        Boolean(selectedColor) && "cursor-none"
       }`}
     >
       {grid.map((box, index) => (
