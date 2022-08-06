@@ -39,11 +39,11 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
 };
 
 const Grid = () => {
-  const { grid, updateGrid } = useGrid();
+  const { grid, placeOnGrid } = useGrid();
   const { onPlace, selectedColor } = useUser();
 
   const onClick = (position: number) => {
-    updateGrid(selectedColor!, position);
+    placeOnGrid(selectedColor!, position);
     onPlace();
   };
 
@@ -54,7 +54,12 @@ const Grid = () => {
       }`}
     >
       {grid.map((box, index) => (
-        <GridBox color={box.color} position={index} onClick={onClick} />
+        <GridBox
+          key={index}
+          color={box.color}
+          position={index}
+          onClick={onClick}
+        />
       ))}
     </div>
   );

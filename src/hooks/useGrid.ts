@@ -1,4 +1,4 @@
-import { onValue, ref } from "firebase/database";
+import { onValue, ref, runTransaction } from "firebase/database";
 import { useEffect, useState } from "react";
 import { Color, GridBox } from "../types";
 import { SIZE } from "../util";
@@ -12,17 +12,26 @@ const useGrid = () => {
   );
 
   useEffect(() => {
-    onValue(ref(db, "grid"), (snapshot) => setGrid(snapshot.val()));
+    onValue(ref(db, "grid"), (snapshot) => {
+      const val = snapshot.val();
+      if (val) {
+        setGrid(val);
+      }
+    });
   }, []);
 
-  const updateGrid = (color: Color, position: number) => {
+  const placeOnGrid = (color: Color, position: number) => {
     setGrid((prev) => {
       prev[position].color = color;
       return [...prev];
     });
+    runTransaction(ref(db, `grid/${position}`), (box) => {
+      box.color = color;
+      return box;
+    });
   };
 
-  return { grid, updateGrid };
+  return { grid, placeOnGrid };
 };
 
 export default useGrid;

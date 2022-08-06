@@ -13,7 +13,7 @@ const ColorSelector = () => {
     <div className={tw`w-grid m-auto bg-slate-300`}>
       <div className={tw`grid grid-cols-10 p-5`}>
         {colors.map((color) => (
-          <div className={tw`block w-11 h-11 text-center`}>
+          <div key={color} className={tw`block w-11 h-11 text-center`}>
             <span
               className={tw`block w-full h-full ${getBgColor(
                 color
