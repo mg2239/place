@@ -1,27 +1,23 @@
 import { useState, useEffect } from "react";
 import { tw } from "twind";
-import { Color, Position } from "../types";
-import { getBgColor } from "../util";
+import { Color } from "../types";
+import { getBgColor, SIZE } from "../util";
 import { useUser } from "../context/UserContext";
+import { GridBox as GridBoxType } from "../types/index";
 
-type GridBoxProps = {
-  color: Color;
-  position: Position;
-  onClick: (position: Position) => void;
+type GridBoxProps = GridBoxType & {
+  position: number;
+  onClick: (index: number) => void;
 };
 
 const GridBox = ({ color, position, onClick }: GridBoxProps) => {
   const [hover, setHover] = useState(false);
-  const [selected, setSelected] = useState(color);
   const { selectedColor, canPlace } = useUser();
 
   const shouldPreview = Boolean(hover && canPlace);
 
-  const handleHover = () => {};
-
   const handleClick = () => {
     if (selectedColor && canPlace) {
-      setSelected(selectedColor);
       setHover(false);
       onClick(position);
     }
@@ -32,7 +28,7 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
       className={tw(
         "w-full",
         "h-full",
-        getBgColor(selected),
+        getBgColor(color),
         shouldPreview && `hover:${getBgColor(selectedColor!)}`
       )}
       onMouseEnter={() => setHover(true)}
@@ -42,27 +38,24 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
   );
 };
 
-const SIZE = 20;
-
 const Grid = () => {
-  const [grid, setGrid] = useState<GridBoxProps[]>(
-    [...new Array(SIZE ** 2)].map((_, index) => ({
+  const [grid, setGrid] = useState<GridBoxType[]>(
+    [...new Array(SIZE ** 2)].map(() => ({
       color: Color.WHITE,
-      position: getPosition(index),
-      onClick: onClick,
     }))
   );
-  const { canPlace, onPlace } = useUser();
+  const { canPlace, onPlace, selectedColor } = useUser();
 
-  function getPosition(index: number) {
-    const x = index % SIZE;
-    const y = Math.floor(index / SIZE);
-    return { y, x };
-  }
-
-  function onClick(position: Position) {
-    onPlace();
-  }
+  const onClick = (position: number) => {
+    setGrid((prev) => {
+      if (selectedColor) {
+        prev[position].color = selectedColor;
+        onPlace(prev);
+        return [...prev];
+      }
+      return prev;
+    });
+  };
 
   return (
     <div
@@ -70,8 +63,8 @@ const Grid = () => {
         canPlace && "cursor-none"
       }`}
     >
-      {grid.map((props) => (
-        <GridBox {...props} />
+      {grid.map((box, index) => (
+        <GridBox color={box.color} position={index} onClick={onClick} />
       ))}
     </div>
   );

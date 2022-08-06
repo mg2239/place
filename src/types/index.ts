@@ -15,3 +15,7 @@ export type Position = {
   y: number;
   x: number;
 };
+
+export type GridBox = {
+  color: Color;
+};

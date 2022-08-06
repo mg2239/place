@@ -3,17 +3,16 @@ import {
   PropsWithChildren,
   useContext,
   useEffect,
-  useMemo,
   useState,
 } from "react";
-import { Color } from "../types";
+import { Color, GridBox } from "../types";
 
 type UserContextType = {
   selectedColor?: Color;
   onSelect: (color: Color) => void;
   timeRemaining: number;
   canPlace: boolean;
-  onPlace: () => void;
+  onPlace: (grid: GridBox[]) => void;
 };
 
 const initialState: UserContextType = {
@@ -62,7 +61,7 @@ export const UserProvider = ({ children }: PropsWithChildren) => {
     setCanPlace(Boolean(selectedColor && timeRemaining === 0));
   }, [timeRemaining, selectedColor]);
 
-  const onPlace = () => {
+  const onPlace = (grid: GridBox[]) => {
     setTimeRemaining(10);
     setSelectedColor(undefined);
   };

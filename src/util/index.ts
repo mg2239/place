@@ -1,4 +1,4 @@
-import { Color } from "../types";
+import { Color, Position } from "../types";
 
 export const getBgColor = (color: Color) => {
   const map = {
@@ -15,3 +15,5 @@ export const getBgColor = (color: Color) => {
   };
   return map[color];
 };
+
+export const SIZE = 20;
