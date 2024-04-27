@@ -22,8 +22,6 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
     }
   };
 
-  // const previewColor = ;
-
   return (
     <span
       className={`w-full h-full ${getBgColor(color)} ${
