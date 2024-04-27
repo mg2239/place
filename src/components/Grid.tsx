@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { tw } from "twind";
 import { getBgColor } from "../util";
 import { useUser } from "../context/UserContext";
 import { GridBox as GridBoxType } from "../types/index";
@@ -14,7 +13,7 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
   const [hover, setHover] = useState(false);
   const { selectedColor } = useUser();
 
-  const shouldPreview = Boolean(hover && selectedColor);
+  const shouldPreview = !!hover && !!selectedColor;
 
   const handleClick = () => {
     if (selectedColor) {
@@ -23,14 +22,13 @@ const GridBox = ({ color, position, onClick }: GridBoxProps) => {
     }
   };
 
+  // const previewColor = ;
+
   return (
     <span
-      className={tw(
-        "w-full",
-        "h-full",
-        getBgColor(color),
-        shouldPreview && `hover:${getBgColor(selectedColor!)}`
-      )}
+      className={`w-full h-full ${getBgColor(color)} ${
+        shouldPreview ? `hover:${getBgColor(selectedColor)}` : ""
+      }`}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       onClick={handleClick}
@@ -48,11 +46,7 @@ const Grid = () => {
   };
 
   return (
-    <div
-      className={tw`grid grid-cols-size w-grid h-grid m-auto mt-4 border border-slate-300 ${
-        Boolean(selectedColor) && "cursor-none"
-      }`}
-    >
+    <div className="grid grid-cols-size w-grid h-grid m-auto mt-4 border border-slate-300">
       {grid.map((box, index) => (
         <GridBox
           key={index}
